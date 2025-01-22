@@ -1,6 +1,4 @@
-FROM node:14.21.3-bullseye-slim AS builder
-
-LABEL maintainer="marcel@marquez.fr"
+FROM node:9.11.2-slim AS builder
 
 WORKDIR /opt/app
 RUN apt update && apt install git python build-essential -y
@@ -9,7 +7,7 @@ RUN npm install
 
 COPY pegascape.sh /opt/app
 
-FROM node:14.21.3-bullseye-slim
+FROM node:9.11.2-slim
 
 RUN groupadd -r pegascape && useradd --no-log-init -r -g pegascape pegascape
 
@@ -18,13 +16,10 @@ COPY --from=builder /opt/app ./
 
 RUN chown -R pegascape:pegascape /opt/app
 
-ARG HOST_IP=192.168.0.1
-ENV HOST_IP $HOST_IP
-
 EXPOSE 80
 EXPOSE 53/UDP
 EXPOSE 8100
 
 USER pegascape
 
-ENTRYPOINT ["/bin/sh", "pegascape.sh", "&"]
+ENTRYPOINT ["node", "start.js", "$CMD_ARGUMENT"]

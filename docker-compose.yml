@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  pegascape:
+    ports:
+      - 80:80
+      - 53:53/udp
+      - 8100:8100
+    environment:
+      - CMD_ARGUMENT
+    container_name: pegascape
+    tty: true
+    image: ramdockerapp/pegascape:latest
